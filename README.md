@@ -1,84 +1,91 @@
-# Navegación de Agente — Grid World
+#  Agente de Navegación en Grid World usando DFS
 
-## Objetivo
+## Descripción
 
-Programar un agente que navegue desde el punto **A** hasta el punto **B**
-en un mapa con paredes. Verás en tiempo real cómo tu agente toma decisiones.
+Este proyecto implementa un agente inteligente capaz de navegar desde un punto inicial (A) hasta una meta (B) en un entorno tipo Grid World con obstáculos.
 
-## Archivos
+El entorno es **parcialmente observable**, ya que el agente solo puede percibir las celdas adyacentes en cada iteración, por lo que no cuenta con conocimiento global del mapa.
 
-```
-├── entorno.py     ← El mundo (NO MODIFICAR)
-├── mi_agente.py   ← ✏️  TU AGENTE (editar aquí)
-└── main.py        ← Ejecutor (configurar y correr)
-```
+---
 
-## Cómo empezar
+## Enfoque de la solución
 
-### 1. Abre `mi_agente.py`
+Para resolver el problema se implementó un agente basado en el algoritmo **Depth-First Search (DFS)**.
 
-Ahí encontrarás la clase `MiAgente` con el método `decidir()` vacío.
-Tu trabajo es programar la lógica de decisión.
+Este enfoque permite explorar el entorno de manera sistemática sin necesidad de conocer el mapa completo.
 
-### 2. Lo que recibes
+El agente utiliza:
 
-Cada turno tu agente recibe un diccionario `percepcion`:
+* Un conjunto de celdas visitadas para evitar ciclos
+* Una pila para realizar **backtracking** cuando no encuentra nuevos caminos
 
-```python
-percepcion = {
-    'posicion':       (3, 5),                    # Tu fila y columna
-    'arriba':         'libre',                   # Qué hay arriba
-    'abajo':          'pared',                   # Qué hay abajo
-    'izquierda':      'libre',                   # Qué hay a la izquierda
-    'derecha':        None,                      # None = fuera del mapa
-    'direccion_meta': ('abajo', 'derecha'),      # Hacia dónde queda B
-}
-```
+---
 
-Valores posibles: `'libre'`, `'pared'`, `'meta'`, `None` (borde).
+## Función de utilidad
 
-### 3. Lo que retornas
+La utilidad del agente se define como el **número de pasos necesarios para alcanzar la meta**.
 
-Una de estas cadenas: `'arriba'`, `'abajo'`, `'izquierda'`, `'derecha'`
+El objetivo es minimizar esta cantidad. Sin embargo, DFS no garantiza encontrar el camino más corto, pero sí una solución válida en entornos desconocidos.
 
-Si retornas un movimiento inválido, tu agente se queda quieto.
+---
 
-### 4. Ejecutar
+## Funcionamiento del agente
 
-```bash
-python main.py
-```
+En cada iteración, el agente realiza:
 
-Verás una animación paso a paso de tu agente navegando.
+1. Observa su posición y entorno inmediato
+2. Verifica si la meta está en una celda adyacente
+3. Si no, busca una celda libre no visitada
+4. Se mueve hacia esa celda y la registra
+5. Si no hay opciones, realiza backtracking
+6. Repite el proceso hasta encontrar la meta
 
-## Configuración
+---
 
-En `main.py` puedes cambiar:
+## Estructura del proyecto
 
-| Variable   | Default | Qué hace                         |
-|------------|---------|----------------------------------|
-| `FILAS`    | 10      | Alto del mapa                    |
-| `COLUMNAS` | 10      | Ancho del mapa                   |
-| `SEMILLA`  | 42      | Cambiar = otro mapa              |
-| `PAREDES`  | 0.20    | Porcentaje de paredes (0 a 0.40) |
-| `VELOCIDAD`| 0.15    | Segundos entre pasos             |
+* `entorno.py` → entorno del problema (no editable)
+* `mi_agente.py` → implementación del agente
+* `main.py` → configuración y ejecución
 
-## Leyenda del mapa
+---
 
-| Color    | Significado         |
-|----------|---------------------|
-| Rojo     | A — Punto de inicio |
-| Verde    | B — Meta            |
-| Azul osc.| Pared (bloqueada)   |
-| Azul clr.| Libre (transitable) |
-| Morado   | Ya visitada         |
-| Amarillo | Tu agente           |
+## Código del agente
 
-## Consejos
+El agente fue implementado en el archivo `mi_agente.py`:
 
-- Empieza simple: haz que tu agente al menos se mueva hacia la meta.
-- Usa `percepcion['direccion_meta']` como guía general.
-- Si tu agente se queda atrapado, necesitas lógica para rodear paredes.
-- Puedes agregar atributos a tu clase (`self.memoria`, `self.pasos`, etc.)
-  para que tu agente recuerde cosas.
-- Prueba con diferentes semillas para verificar que tu agente es robusto.
+---
+
+## Pruebas realizadas
+
+Se realizaron pruebas con distintas configuraciones del entorno:
+
+* Prueba 1: (15x15, 30% paredes, semilla 10)
+* Prueba 2: (15x15, 30% paredes, semilla 20)
+* Prueba 3: (15x15, 30% paredes, semilla 30)
+
+En todos los casos, el agente logró alcanzar la meta.
+
+---
+
+## Resultados
+
+El agente navega correctamente en diferentes escenarios, explorando el entorno mediante DFS.
+
+Aunque el camino no siempre es el más corto, el agente cumple con el objetivo de llegar a la meta de forma consistente.
+
+---
+
+## Conclusión
+
+El algoritmo DFS resulta adecuado para este problema debido a la naturaleza parcialmente observable del entorno.
+
+A diferencia de algoritmos como BFS o A*, que requieren conocimiento global, DFS permite explorar el mapa de manera eficiente y garantizar una solución.
+
+Asimismo, se descartó el uso de algoritmos como Wall-Follower debido a su posible ineficiencia en ciertos casos.
+
+---
+
+## Autor
+
+* César Valdivia Huayllas
